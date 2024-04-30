@@ -44,7 +44,7 @@ async function run() {
             const countries = await CountryCollection.find({}).toArray();
             res.send(countries);
         })
-
+// update
         app.put('/update/:id', async (req, res) => { 
             const touristSpotId = req.params.id;
             const updatedTouristSpot = req.body;
