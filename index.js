@@ -34,7 +34,7 @@ async function run() {
             res.send(result);
             console.log(newTouristSpot)
         })
-
+// get tourist spot  data
         app.get('/tourist-spots', async (req, res) => { 
             const touristSpots = await touristSpotCollection.find({}).toArray();
             res.send(touristSpots);
