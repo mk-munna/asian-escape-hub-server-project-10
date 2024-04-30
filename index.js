@@ -1,5 +1,5 @@
 const express = require('express');
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const app = express();
 const cors = require('cors');
@@ -26,6 +26,7 @@ async function run() {
         await client.connect();
 
         const touristSpotCollection = client.db("TouristSpotDB").collection("TouristSpotCollection");
+        const CountryCollection = client.db("CountryDB").collection("CountryCollection");
 
         app.post('/tourist-spot', async (req, res) => {
             const newTouristSpot = req.body;
@@ -34,6 +35,31 @@ async function run() {
             console.log(newTouristSpot)
         })
 
+        app.get('/tourist-spots', async (req, res) => { 
+            const touristSpots = await touristSpotCollection.find({}).toArray();
+            res.send(touristSpots);
+        })
+
+        app.get('/country', async (req, res) => {
+            const countries = await CountryCollection.find({}).toArray();
+            res.send(countries);
+        })
+
+        app.put('/update/:id', async (req, res) => { 
+            const touristSpotId = req.params.id;
+            const updatedTouristSpot = req.body;
+            const result = await touristSpotCollection.updateOne({ _id: new ObjectId(touristSpotId) }, { $set: updatedTouristSpot });
+            res.send(result);
+            console.log(touristSpotId);
+        })
+
+
+        app.delete('/touristSpot/:id', async (req, res) => { 
+            const touristSpotId = req.params.id;
+            const result = await touristSpotCollection.deleteOne({ _id: new ObjectId(touristSpotId) });
+            res.send(result);
+            console.log(touristSpotId);
+        })
 
 
         // Send a ping to confirm a successful connection
